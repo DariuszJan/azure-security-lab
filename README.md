@@ -1,5 +1,5 @@
 
-# azure-security-lab
+# Azure-Security-Lab
 Azure security detection pipeline - KQL, Log Analytics, Azure Monitor
 # Azure Logging Pipeline — Detection & Alerting
 
