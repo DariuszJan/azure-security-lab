@@ -1,0 +1,21 @@
+// Detection: DELETE operations on Azure control plane
+// Source: AzureActivity (built-in, no Diagnostic Settings required)
+// Purpose: Detect resource deletions (VMs, containers, resource groups, etc.)
+// Use in: Log Analytics Workspace → Logs
+
+AzureActivity
+| where TimeGenerated > ago(1d)
+| where OperationNameValue endswith "/DELETE"
+| where ActivityStatusValue in~ ("Success", "Succeeded")
+| where ResourceGroup =~ "rg-security-lab"
+| project TimeGenerated, Caller, OperationNameValue, ResourceGroup
+| sort by TimeGenerated desc
+
+// --- Alert Rule version (used in Azure Monitor Log Search Alert) ---
+// Threshold: Count > 0 | Frequency: 5 min | Lookback: 10 min
+
+AzureActivity
+| where TimeGenerated > ago(10m)
+| where OperationNameValue endswith "/DELETE"
+| where ActivityStatusValue in~ ("Success", "Succeeded")
+| summarize Count = count()

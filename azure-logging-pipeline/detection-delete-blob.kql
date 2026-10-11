@@ -1,0 +1,10 @@
+// Detection: Blob DELETE operations in Azure Storage
+// Source: StorageBlobLogs (requires Diagnostic Settings enabled on Storage Account)
+// Purpose: Detect file deletions inside Blob containers
+// Use in: Log Analytics Workspace → Logs
+
+StorageBlobLogs
+| where TimeGenerated > ago(1h)
+| where OperationName == "DeleteBlob"
+| project TimeGenerated, CallerIpAddress, Uri, StatusCode
+| sort by TimeGenerated desc
